@@ -48,7 +48,6 @@ try:
             # Get collection info
             info = client.get_collection(collection.name)
             print(f"     Points: {info.points_count}")
-            print(f"     Vectors: {info.vectors_count}")
     else:
         print("   No collections found (empty database)")
     
