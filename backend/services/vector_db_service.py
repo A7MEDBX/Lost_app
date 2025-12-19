@@ -2,17 +2,31 @@
 Vector Database Service - Handles embedding storage and similarity search using Qdrant
 """
 
+import os
 from qdrant_client import QdrantClient
 from qdrant_client.models import Distance, VectorParams, PointStruct, Filter, FieldCondition, MatchValue
 
 
 class VectorDBService:
     def __init__(self):
-        """Initialize Qdrant client (local mode)"""
+        """Initialize Qdrant client (local or cloud mode)"""
         self.collection_name = "lost_found_items"
         
-        # Initialize Qdrant in local mode (file-based storage)
-        self.client = QdrantClient(path="./qdrant_data")
+        # Check for Qdrant Cloud credentials in environment variables
+        qdrant_url = os.getenv('QDRANT_URL')
+        qdrant_api_key = os.getenv('QDRANT_API_KEY')
+        
+        if qdrant_url and qdrant_api_key:
+            # Use Qdrant Cloud
+            self.client = QdrantClient(
+                url=qdrant_url,
+                api_key=qdrant_api_key,
+            )
+            print(f"✅ Connected to Qdrant Cloud")
+        else:
+            # Fallback to local mode (file-based storage)
+            self.client = QdrantClient(path="./qdrant_data")
+            print(f"✅ Using local Qdrant (./qdrant_data)")
         
         # Create collection if it doesn't exist
         self._create_collection_if_not_exists()

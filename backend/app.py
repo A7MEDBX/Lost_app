@@ -4,6 +4,10 @@ import os
 from datetime import datetime
 import uuid
 from werkzeug.utils import secure_filename
+from dotenv import load_dotenv
+
+# Load environment variables
+load_dotenv()
 
 from services.ai_service import AIService
 from services.storage_service import StorageService
